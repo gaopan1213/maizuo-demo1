@@ -16,6 +16,9 @@ export default {
         'userInfo',
         JSON.stringify({ username: '张三' })
       )
+      let redirect = this.$route.query.redirect || '/films'
+      this.$router.replace(redirect)
+      console.log(1)
     }
   }
 }

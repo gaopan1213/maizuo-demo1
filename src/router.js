@@ -40,7 +40,10 @@ const router = new Router({
     {
       path: '/money',
       name: 'money',
-      component: Money
+      component: Money,
+      meta: {
+        needLogin: true
+      }
     },
     {
       path: '/film',
@@ -57,5 +60,19 @@ const router = new Router({
       component: City
     }
   ]
+})
+router.beforeEach((to, from, next) => {
+  let userInfo = window.localStorage.getItem('userInfo')
+  if (userInfo == null && to.meta.needLogin) {
+    console.log(to)
+    next({
+      path: '/login',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  } else {
+    next()
+  }
 })
 export default router
