@@ -1,39 +1,78 @@
 <template>
   <div class="page-home-films">
-    <p>电影列表页</p>
-    <p>{{title}}</p>
-    <p>{{reverseMsg}}</p>
+    <!-- 轮播图 -->
+    <div style="height:200px"></div>
+    <!-- tabs切换 -->
+    <div class="tabs">
+      <ul>
+        <li :class="{'active':curFilmType=='nowPlaying'}" @click="chgFilmType('nowPlaying')">正在热映</li>
+        <li :class="{'active':curFilmType=='comingSoon'}" @click="chgFilmType('comingSoon')">即将上映</li>
+      </ul>
+      <div class="active-line" :style="{'left':curFilmType=='nowPlaying'?'0':'50%'}">
+        <span></span>
+      </div>
+    </div>
+    <!-- 电影列表 -->
+    <component :is="curFilmType" />
   </div>
 </template>
 <script>
+import nowPlaying from '../../components/nowPlaying'
+import comingSoon from '../../components/comingsoon'
 import { mapState } from 'vuex'
 export default {
-  // computed: {//用计算属性的方式因为仓库中的数据
-  //   title() {
-  //     return this.$store.state.title
-  //   }
-  // },
-  // computed: mapState(['title']),
+  name: 'films',
   data() {
     return {
-      msg: 'hello'
+      curFilmType: 'nowPlaying'
     }
   },
-  computed: {
-    reverseMsg() {
-      return this.msg
-        .split('')
-        .reverse()
-        .join('')
-    },
-    ...mapState(['title'])
+  components: {
+    nowPlaying,
+    comingSoon
   },
-  // computed: mapState({
-  //   a: state => state.title
-  //   // a: 'title'
-  // }),
-  created() {
-    console.log(this.$store.state.title)
+  methods: {
+    chgFilmType(type) {
+      this.curFilmType = type
+    }
   }
 }
 </script>
+<style lang="scss">
+@import '../../assets/styles/common/mixin.scss';
+.tabs {
+  height: 50px;
+  @include border-bottom;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: white;
+  ul {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    li {
+      flex: 1;
+      text-align: center;
+      &.active {
+        color: #ff5f16;
+      }
+    }
+  }
+  .active-line {
+    height: 2px;
+    width: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: left 0.5s;
+    span {
+      display: block;
+      width: 56px;
+      height: 2px;
+      margin: auto;
+      background: #ff5f16;
+    }
+  }
+}
+</style>
